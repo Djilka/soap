@@ -1,5 +1,10 @@
-#include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+typedef unsigned int TIdOil;
+typedef unsigned char TInternal;
 
 enum Type_Internal {
 	t_min = -1,
@@ -11,8 +16,6 @@ enum Type_Internal {
 	t_iodine_number,
 	t_max,
 };
-
-typedef unsigned char TInternal;
 
 typedef struct Oil {
 	char *name;

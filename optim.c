@@ -175,10 +175,10 @@ void gradient(Oil_Data *data)
 		}
 	}
 
-	print_recipe(data);
+	// print_recipe(data);
 	iter = 0;
 	step = init_step;
-	printf("new check\n");
+	// printf("new check\n");
 	// 26 2 69 72 81 10 100 74
 	// 26 2 69 72 81 100 74
 	
@@ -245,6 +245,7 @@ void simple_alg(Oil_Data *data)
 	alg_item_for(0, data);
 }
 
+// ------------------ main ------------------
 void optim(Oil_Data *data)
 {
 	// simple_alg(data);
