@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define D_USER 0
-
-// #include "optim.h"
+#define D_USER 1
 
 #include "auto.h"
 #if D_USER

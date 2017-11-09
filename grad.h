@@ -1,5 +1,7 @@
+#ifndef GRAD_H
+#define GRAD_H
+
 #include "recipe.h"
-#include <math.h>
 
 void init_decision(set_id *set)
 {
@@ -10,6 +12,26 @@ void init_decision(set_id *set)
 
 bool quality_check(set_id *set, int i, TFQuality delta)
 {
+	if (delta < normal_oil.internal[i].min || 
+		delta > normal_oil.internal[i].max)
+		fl_end = true;
+
+	if ((delta < normal_oil.internal[i].min && 
+		set->d.delta[i] < normal_oil.internal[i].min &&
+		delta < set->d.delta[i]) ||
+		(delta > normal_oil.internal[i].max && 
+		set->d.delta[i] > normal_oil.internal[i].max &&
+		delta > set->d.delta[i]))
+		return false;
+	return true;
+}
+
+TCheckDecision quality_check_decision(set_id *set, int i, TFQuality delta)
+{
+	if (delta < normal_oil.internal[i].min || 
+		delta > normal_oil.internal[i].max)
+		fl_end = true;
+
 	if ((delta < normal_oil.internal[i].min && 
 		set->d.delta[i] < normal_oil.internal[i].min &&
 		delta < set->d.delta[i]) ||
@@ -59,19 +81,33 @@ bool quality_step(set_id *set, TStep step, int id)
 
 void grad(set_id *set)
 {
+	unsigned long iter = 0;
+
+	fl_end = true;
+	TCheckDecision check_decision = tcd_next;
 	init_decision(set);
 	quality_set(set);
 	
 	TStep step = max_step;
 	while (fabs(step) > min_step) {
 		for (int i = 0; i < set->size; i++) {
+			if (!fl_end)
+				goto finish;
+			fl_end = false;
 			while (quality_step(set, step, i)) {
+				iter++;
 				set->w_soap += step;
 				set->d.w[i] += step;
+				if (!fl_end)
+					goto finish;
 			}
 		}
-		step = (-step) / 2;
+		step = (-step) / step_delta;
 	}
 
-	print_recipe(set);
+	finish:
+	if (!fl_end)
+		recipe_add(set);
 }
+
+#endif

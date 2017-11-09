@@ -1,5 +1,5 @@
-#include "optim.h"
-
+#include "grad.h"
+/*
 bool io_system(Oil_Data *data)
 {
 	int count = 0;
@@ -20,22 +20,23 @@ bool io_system(Oil_Data *data)
 	}
 	return data->size == i;
 }
+*/
 
 void user()
 {
-	Oil_Data data = {
-		.weight = NULL,
-		.delta = NULL,
-		.oil = NULL,
-		.size = 0,
-	};
-	if (io_system(&data))
-		optim(&data);
+	// Oil_Data data = {
+	// 	.weight = NULL,
+	// 	.delta = NULL,
+	// 	.oil = NULL,
+	// 	.size = 0,
+	// };
+	// if (io_system(&data))
+	// 	optim(&data);
 	
-	if (data.weight)
-		free(data.weight);
-	if (data.oil)
-		free(data.oil);
-	if (data.delta)
-		free(data.delta);
+	// if (data.weight)
+	// 	free(data.weight);
+	// if (data.oil)
+	// 	free(data.oil);
+	// if (data.delta)
+	// 	free(data.delta);
 }

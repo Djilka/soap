@@ -1,4 +1,5 @@
 #include "oil.h"
+#include <math.h>
 
 typedef int 	TIter;
 typedef float 	TStep;
@@ -12,6 +13,15 @@ TWeight init_weight = 200.0;
 
 TStep max_step = 200.0;
 TStep min_step = 0.005;
+int step_delta = 2;
+
+// delete flag
+bool fl_end = false;
+typedef enum TCheckDecision {
+	tcd_bad = 0,
+	tcd_next,
+	tcd_ok,
+}TCheckDecision;
 
 typedef struct TDecision {
 	TWeight		*w;
@@ -25,3 +35,32 @@ typedef struct set_id {
 	TIdOil		*id;
 	TDecision	d;
 }set_id;
+
+set_id init_set(int size)
+{
+	set_id set = {
+		.size = size, 
+		.id = malloc(size * sizeof(TIdOil)),
+		.d.w = malloc(size * sizeof(TWeight)),
+	};
+	return set;
+}
+
+// repair type
+bool copy_set(set_id *set, int *idx)
+{
+	if (NULL != set->id && NULL != set->d.w) {
+		memcpy(set->id, idx, set->size * sizeof(int));
+		return true;
+	}
+	return false;
+}
+
+void free_set(set_id *set)
+{
+	set->size = 0;
+	free(set->id);
+	free(set->d.w);
+	set->id = NULL;
+	set->d.w = NULL;
+}

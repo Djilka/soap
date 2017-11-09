@@ -17,6 +17,7 @@ TARGET = calc
 
 calc:
 	$(CC) -o $(TARGET) $(SOURCE) $(OPT)
+	# $(CC) -v -o $(TARGET) $(SOURCE) $(OPT)
 
 clean:
 	rm -rf *.o $(TARGET)

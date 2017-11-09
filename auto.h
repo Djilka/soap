@@ -1,34 +1,5 @@
 #include "grad.h"
 
-set_id init_set(int size)
-{
-	set_id set = {
-		.size = size, 
-		.id = malloc(size * sizeof(TIdOil)),
-		.d.w = malloc(size * sizeof(TWeight)),
-	};
-	return set;
-}
-
-// repair type
-bool copy_set(set_id *set, int *idx)
-{
-	if (NULL != set->id && NULL != set->d.w) {
-		memcpy(set->id, idx, set->size * sizeof(int));
-		return true;
-	}
-	return false;
-}
-
-void free_set(set_id *set)
-{
-	set->size = 0;
-	free(set->id);
-	free(set->d.w);
-	set->id = NULL;
-	set->d.w = NULL;
-}
-
 int compare(const void *a, const void *b)
 {
   return ( *(unsigned int*)a - *(unsigned int*)b );
@@ -77,22 +48,38 @@ bool corrected(set_id *set, int size, char *list[])
 	return false;
 }
 
-void item_set_optim()
+bool is_used_id(TIdOil id, TIdOil *used_id, int index)
 {
-	
+	for (int j = 0; j <= index - 1; j++)
+		if (used_id[j] == id)
+			return true;
+	return false;
 }
 
-void change_set(set_id set, int index)
+void change_set(set_id *set, TIdOil *id, TIdOil *used_id, int index)
 {
-
+	if (index == set->size)
+		grad(set);
+	else {
+		for (int i = 0; i < set->size; i++) {
+			if (is_used_id(id[i], used_id, index))
+				continue;
+			
+			set->id[index] = id[i];
+			used_id[index] = id[i];
+			change_set(set, id, used_id, index + 1);
+		}
+	}
 }
 
 void range_set(set_id *set)
 {
-	// for (int i = 0; i < set->size; i++) {
-
-	// }
-	grad(set);
+	TIdOil id[set->size], used_id[set->size];
+	memcpy(id, set->id, sizeof(TIdOil) * set->size);
+	change_set(set, id, used_id, 0);
+	// grad(set);
+	recipe_print_all();
+	recipe_clear();
 }
 
 void auto_range(int size, char *list[])

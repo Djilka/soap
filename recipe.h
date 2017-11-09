@@ -1,55 +1,5 @@
 #include "option.h"
 
-typedef struct Oil_Data {
-	int 	*delta;
-	Oil 	*oil;
-	int 	*weight;
-	int 	size;
-}Oil_Data;
-
-#if D_USER
-static 
-void print_recipe(Oil_Data *data)
-{
-	int weight = 0;
-
-	for (int i = 0; i < data->size; i++) {
-		weight += data->weight[i];
-	}
-
-	for (int i = 0; i < t_max; i++) {
-		int item = 0;
-		for (int j = 0; j < data->size; j++) {
-			item += data->weight[j]*data->oil[j].internal[i];
-		}
-		item = item/weight;
-		if ((i == 0 && item < 33) || 
-			(i == 3 && item > 40) || 
-			(i == 5 && item > 70))
-			return;
-	}
-
-	weight = 0;
-
-	printf("---------------------------------\n");
-	for (int i = 0; i < data->size; i++) {
-		printf("%s = %d\n", data->oil[i].name, data->weight[i]);
-		weight += data->weight[i];
-	}
-
-	printf("characteristic:\n");
-	for (int i = 0; i < t_max; i++) {
-		int item = 0;
-		for (int j = 0; j < data->size; j++) {
-			item += data->weight[j]*data->oil[j].internal[i];
-		}
-		item = item/weight;
-		printf("h = %d\n", item);
-	}
-}
-#endif
-
-static 
 void print_recipe(set_id *set)
 {
 	printf("---------------------------------\n");
@@ -62,11 +12,50 @@ void print_recipe(set_id *set)
 		printf("h = %f\n", set->d.delta[i]);
 }
 
-typedef struct list_recipe {
-	int 	size;
-	int 	*weight;
-	Oil 	*oil;
-}list_recipe;
+#define recipe_max 100
+int recipe_cur = 0;
+set_id recipe[recipe_max];
+TStep recipe_delta = 1;
 
-static int max_recipe = 255;
-static list_recipe recipe;
+bool recipe_check(set_id *set)
+{
+	bool fl = true;
+	for (int i = 0; i < recipe_cur; i++) {
+		fl = true;
+		for (int j = 0; j < t_max && fl; j++) {
+			if (fabs(recipe[i].d.delta[j] - set->d.delta[j]) > recipe_delta)
+				fl = false;
+		}
+		if (fabs(recipe[i].w_soap - set->w_soap) < recipe_delta && fl)
+			return true;
+	}
+	return false;
+}
+
+void recipe_add(set_id *set)
+{
+	if (!recipe_check(set) && recipe_cur < recipe_max) {
+		recipe[recipe_cur] = init_set(set->size);
+		if (copy_set(&recipe[recipe_cur], set->id)) {
+			recipe[recipe_cur].w_soap = set->w_soap;
+			memcpy(recipe[recipe_cur].d.w, set->d.w, set->size * sizeof(TWeight));
+			memcpy(recipe[recipe_cur].d.q, set->d.q, t_max * sizeof(TDQuality));
+			memcpy(recipe[recipe_cur].d.delta, set->d.delta, t_max * sizeof(TFQuality));
+			recipe_cur++;
+		} else
+			printf("error add recipe\n");
+	}
+}
+
+void recipe_clear()
+{
+	for (int i = 0; i < recipe_cur; i++)
+		free_set(&recipe[i]);
+}
+
+void recipe_print_all()
+{
+	printf("recipe_cur = %d\n", recipe_cur);
+	for (int i = 0; i < recipe_cur; i++)
+		print_recipe(&recipe[i]);
+}
