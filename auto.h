@@ -61,10 +61,9 @@ void change_set(set_id *set, TIdOil *id, TIdOil *used_id, int index)
 	if (index == set->size)
 		grad(set);
 	else {
-		for (int i = 0; i < set->size; i++) {
+		for (int i = 0; i < set->size && recipe_count; i++) {
 			if (is_used_id(id[i], used_id, index))
 				continue;
-			
 			set->id[index] = id[i];
 			used_id[index] = id[i];
 			change_set(set, id, used_id, index + 1);
