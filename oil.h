@@ -35,26 +35,18 @@ void oil_auto_init();
 
 // ===========================================
 typedef struct Interval {
-	unsigned char min;
-	unsigned char max;
+	float min;
+	float max;
 } Interval;
 
-typedef struct Normal_Oil
-{
-	Interval internal[t_max];
-	unsigned char balance;
-	unsigned char delta;
-} Normal_Oil;
- 
 extern int oil_count;
 extern Oil *oil;
 
-static const Normal_Oil normal_oil = {
-	{{35, 45},
-	{15, 20},
-	{50, 70},
-	{15, 30},
-	{15, 35},
-	{0,  60}},
-	160, 20
-};
+static
+Interval internal[t_max] = {
+	{35.0, 45.0},
+	{15.0, 20.0},
+	{50.0, 70.0},
+	{15.0, 30.0},
+	{15.0, 35.0},
+	{0.0,  60.0}};

@@ -77,7 +77,6 @@ void range_set(set_id *set)
 	TIdOil id[set->size], used_id[set->size];
 	memcpy(id, set->id, sizeof(TIdOil) * set->size);
 	change_set(set, id, used_id, 0);
-	// grad(set);
 	recipe_print_all();
 	recipe_clear();
 }

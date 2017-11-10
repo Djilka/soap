@@ -56,6 +56,6 @@ void recipe_clear()
 void recipe_print_all()
 {
 	printf("recipe_cur = %d\n", recipe_cur);
-	for (int i = 0; i < recipe_cur; i++)
-		print_recipe(&recipe[i]);
+	// for (int i = 0; i < recipe_cur; i++)
+	// 	print_recipe(&recipe[i]);
 }

@@ -13,14 +13,17 @@ TWeight init_weight = 200.0;
 
 TStep max_step = 200.0;
 TStep min_step = 0.005;
-int step_delta = 2;
+int step_delta = 3;
 
 // delete flag
 bool fl_end = false;
 typedef enum TCheckDecision {
-	tcd_bad = 0,
-	tcd_next,
-	tcd_ok,
+	tcd_null 	= -1,
+	tcd_ok 		= 0,
+	tcd_next 	= 1,
+	tcd_eq 		= 2,
+	tcd_bad 	= 3,
+	tcd_max,
 }TCheckDecision;
 
 typedef struct TDecision {
