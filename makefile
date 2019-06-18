@@ -3,8 +3,7 @@ PWD = $(shell pwd)
 CC = gcc
 
 SOURCE = 	calc.c \
-		 	oil.c \
-		 	optim.c
+		 	oil.c
 
 INC = -I$(PWD)
 LIB = #-lm
